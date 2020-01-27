@@ -4,15 +4,7 @@ const server = express();
 
 server.use(express.json());
 
-const projects = [
-  {
-    id: 1,
-    title: "Novo projeto",
-    tasks: ["Nova tarefa"]
-  }
-];
-
-var requests = 0;
+const projects = [];
 
 
 //Middlewares:
@@ -29,11 +21,9 @@ function checkIdExists(req, res, next) {
   return next();
 }
 server.use((req, res, next) => {
-  requests++;
-
   next();
 
-  console.log(`Número de requisições realizadas: ${requests}`);
+  console.count("Número de requisições realizadas");
 });
 
 
@@ -51,10 +41,7 @@ server.post('/projects/:id/tasks', checkIdExists, (req, res) => {
 
   const index = req.index;
 
-  const tasks = projects[index].tasks;
-  tasks.push(title);
-
-  projects[index].tasks = tasks;
+  projects[index].tasks.push(title);
 
   return res.json(projects);
 });
@@ -65,7 +52,6 @@ server.get('/projects', (req, res) => {
 
 server.put('/projects/:id', checkIdExists, (req, res) => {
   const project = req.body;
-
   const index = req.index;
 
   projects[index] = project;
@@ -78,7 +64,7 @@ server.delete('/projects/:id', checkIdExists, (req,res) => {
 
   projects.splice(index, 1);
 
-  return res.json(projects);
+  return res.send();
 });
 
 
